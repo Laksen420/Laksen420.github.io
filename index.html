@@ -1,29 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Simple Map</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2sXcylQ7U9lTBA7aOQb6TqJ44pn7RbWY&callback=initMap" async defer></script>
-    <style>
-        #map {
-            height: 100%;
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-</head>
-<body>
-    <div id="map"></div>
-    <script>
-        var map;
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: -34.397, lng: 150.644},
-                zoom: 8
-            });
-        }
-    </script>
-</body>
-</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.3/paho-mqtt.min.js"></script>
+<script>
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 8
+        });
+    }
+
+    function addMarker(lat, lng) {
+        new google.maps.Marker({
+            position: {lat: lat, lng: lng},
+            map: map
+        });
+    }
+
+    function onMessageArrived(message) {
+        var payload = JSON.parse(message.payloadString);
+        addMarker(payload.latitude, payload.longitude);
+    }
+
+    // Configure MQTT client connection
+    var client = new Paho.MQTT.Client("YOUR_BROKER_IP", YOUR_BROKER_PORT, "clientId");
+    client.onMessageArrived = onMessageArrived;
+    client.connect({onSuccess: function() {
+        client.subscribe("gps/data");
+    }});
+</script>
