@@ -1,29 +1,31 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 <script>
-    var map;
-    function initMap(console.log) {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 8
-        });
-    }
+var map;
+function initMap() {
+    console.log("Map initialization");
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -34.397, lng: 150.644},
+        zoom: 8
+    });
+}
 
-    function addMarker(lat, lng) {
-        new google.maps.Marker({
-            position: {lat: lat, lng: lng},
-            map: map
-        });
-    }
+function addMarker(lat, lng) {
+    new google.maps.Marker({
+        position: {lat: lat, lng: lng},
+        map: map
+    });
+}
 
-    function onMessageArrived(message) {
-        var payload = JSON.parse(message.payloadString);
-        addMarker(payload.latitude, payload.longitude);
-    }
+function onMessageArrived(message) {
+    console.log("Message Arrived:", message.payloadString);
+    var payload = JSON.parse(message.payloadString);
+    addMarker(payload.latitude, payload.longitude);
+}
 
-    // Configure MQTT client connection
-    var client = new Paho.MQTT.Client("192.168.0.95", 9001, "burgermanden");
-    client.onMessageArrived = onMessageArrived;
-    client.connect({onSuccess: function() {
-        client.subscribe("gps/data");
-    }});
+// Configure MQTT client connection
+var client = new Paho.MQTT.Client("192.168.0.95", 9001, "burgermanden");
+client.onMessageArrived = onMessageArrived;
+client.connect({onSuccess: function() {
+    console.log("Connected to MQTT broker");
+    client.subscribe("gps/data");
+}});
 </script>
