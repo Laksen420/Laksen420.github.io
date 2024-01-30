@@ -21,7 +21,7 @@
     }
 
     // Configure MQTT client connection
-    var client = new Paho.MQTT.Client("192.168.0.95", "9001", "burgermanden");
+    var client = new Paho.MQTT.Client("192.168.0.95", 9001, "burgermanden");
     client.onMessageArrived = onMessageArrived;
     client.connect({onSuccess: function() {
         client.subscribe("gps/data");
