@@ -21,7 +21,7 @@
     }
 
     // Configure MQTT client connection
-    var client = new Paho.MQTT.Client("YOUR_BROKER_IP", YOUR_BROKER_PORT, "clientId");
+    var client = new Paho.MQTT.Client("192.168.0.95", YOUR_BROKER_PORT, "8080");
     client.onMessageArrived = onMessageArrived;
     client.connect({onSuccess: function() {
         client.subscribe("gps/data");
